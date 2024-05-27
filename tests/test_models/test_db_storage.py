@@ -31,24 +31,6 @@ class test_basemodel(unittest.TestCase):
         """ """
         i = self.value()
         self.assertEqual(type(i), self.value)
-<<<<<<< HEAD
-                                            
-    def test_kwargs(self):
-        """ """
-        i = self.value()
-        copy = i.to_dict()
-        new = BaseModel(**copy)
-        self.assertFalse(new is i)
-
-    def test_kwargs_int(self):
-        """ """
-        i = self.value()
-        copy = i.to_dict()
-        copy.update({1: 2})
-        with self.assertRaises(TypeError):
-            new = BaseModel(**copy)
-
-=======
 
     def test_kwargs(self):
         """ """
@@ -65,7 +47,6 @@ class test_basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
 
->>>>>>> origin/main
     def test_save(self):
         """ Testing save """
         i = self.value()
@@ -79,11 +60,7 @@ class test_basemodel(unittest.TestCase):
         """ """
         i = self.value()
         self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-<<<<<<< HEAD
-            i.__dict__))
-=======
                          i.__dict__))
->>>>>>> origin/main
 
     def test_todict(self):
         """ """
