@@ -88,10 +88,10 @@ class DBStorage:
         gets an object
         '''
         obj_dict = models.storage.all(cls)
-        for m, h in obj_dict.items():
+        for k, v in obj_dict.items():
             matchstring = cls + '.' + id
-            if m == matchstring:
-                return h
+            if k == matchstring:
+                return v
 
         return None
 
