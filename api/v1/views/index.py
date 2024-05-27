@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-''' just used for routing to different parts of the api'''
+"""
+api view for index and several blueprints"""
 
 from models import storage
 from models.user import User
@@ -21,7 +22,7 @@ classes = {
 }
 
 
-@app_views.route('/status', methods=['GET'])
+@app_views.route('/status')
 def status():
     ''' routes to status page '''
     return jsonify({"status": "OK"})
