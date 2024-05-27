@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-''' index file '''
+''' just used for routing to different parts of the api'''
 
 from models import storage
 from models.user import User

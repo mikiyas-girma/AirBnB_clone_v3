@@ -71,7 +71,7 @@ class FileStorage:
 
     def get(self, cls, id):
         '''
-        gets an object
+        gets an object by class and id
         '''
         obj_dict = models.storage.all(cls)
         for k, v in obj_dict.items():

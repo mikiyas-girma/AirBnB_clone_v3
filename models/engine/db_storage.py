@@ -8,6 +8,7 @@ HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import models
 from models.base_model import Base
 from models.user import User
 from models.state import State
