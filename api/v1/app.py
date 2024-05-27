@@ -14,7 +14,7 @@ app.url_map.strict_slashes = False
 
 
 @app.teardown_appcontext
-def close_storage(exc=None):
+def do_teardown(self):
     """
     closes the storage engine
     """
