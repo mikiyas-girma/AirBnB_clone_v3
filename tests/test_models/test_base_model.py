@@ -31,6 +31,21 @@ class test_basemodel(unittest.TestCase):
         """ """
         i = self.value()
         self.assertEqual(type(i), self.value)
+                                            
+    def test_kwargs(self):
+        """ """
+        i = self.value()
+        copy = i.to_dict()
+        new = BaseModel(**copy)
+        self.assertFalse(new is i)
+
+    def test_kwargs_int(self):
+        """ """
+        i = self.value()
+        copy = i.to_dict()
+        copy.update({1: 2})
+        with self.assertRaises(TypeError):
+            new = BaseModel(**copy)
 
     def test_kwargs(self):
         """ """
