@@ -1,148 +1,99 @@
 #!/usr/bin/python3
-'''
-    Testing the file_storage module.
-'''
-import time
+""" """
+from models.base_model import BaseModel
 import unittest
-import sys
-from models.engine.db_storage import DBStorage
-from models import storage
-from models.user import User
-from models.state import State
-from models import storage
-from console import HBNBCommand
-from os import getenv
-from io import StringIO
-
-db = getenv("HBNB_TYPE_STORAGE")
+import datetime
+from uuid import UUID
+import json
+import os
 
 
-@unittest.skipIf(db != 'db', "Testing DBstorage only")
-class test_DBStorage(unittest.TestCase):
-    '''
-        Testing the DB_Storage class
-    '''
-    @classmethod
-    def setUpClass(cls):
-        '''
-            Initializing classes
-        '''
-        cls.dbstorage = DBStorage()
-        cls.output = StringIO()
-        sys.stdout = cls.output
+class test_basemodel(unittest.TestCase):
+    """ """
 
-    @classmethod
-    def tearDownClass(cls):
-        '''
-            delete variables
-        '''
-        del cls.dbstorage
-        del cls.output
+    def __init__(self, *args, **kwargs):
+        """ """
+        super().__init__(*args, **kwargs)
+        self.name = 'BaseModel'
+        self.value = BaseModel
 
-    def create(self):
-        '''
-            Create HBNBCommand()
-        '''
-        return HBNBCommand()
+    def setUp(self):
+        """ """
+        pass
 
-    def test_new(self):
-        '''
-            Test DB new
-        '''
-        new_obj = State(name="California")
-        self.assertEqual(new_obj.name, "California")
+    def tearDown(self):
+        try:
+            os.remove('file.json')
+        except:
+            pass
 
-    def test_dbstorage_user_attr(self):
-        '''
-            Testing User attributes
-        '''
-        new = User(email="melissa@hbtn.com", password="hello")
-        self.assertTrue(new.email, "melissa@hbtn.com")
+    def test_default(self):
+        """ """
+        i = self.value()
+        self.assertEqual(type(i), self.value)
 
-    def test_dbstorage_check_method(self):
-        '''
-            Check methods exists
-        '''
-        self.assertTrue(hasattr(self.dbstorage, "all"))
-        self.assertTrue(hasattr(self.dbstorage, "__init__"))
-        self.assertTrue(hasattr(self.dbstorage, "new"))
-        self.assertTrue(hasattr(self.dbstorage, "save"))
-        self.assertTrue(hasattr(self.dbstorage, "delete"))
-        self.assertTrue(hasattr(self.dbstorage, "reload"))
+    def test_kwargs(self):
+        """ """
+        i = self.value()
+        copy = i.to_dict()
+        new = BaseModel(**copy)
+        self.assertFalse(new is i)
 
-    def test_dbstorage_all(self):
-        '''
-            Testing all function
-        '''
-        storage.reload()
-        result = storage.all("")
-        self.assertIsInstance(result, dict)
-        self.assertEqual(len(result), 0)
-        new = User(email="adriel@hbtn.com", password="abc")
-        console = self.create()
-        console.onecmd("create State name=California")
-        result = storage.all("State")
-        self.assertTrue(len(result) > 0)
+    def test_kwargs_int(self):
+        """ """
+        i = self.value()
+        copy = i.to_dict()
+        copy.update({1: 2})
+        with self.assertRaises(TypeError):
+            new = BaseModel(**copy)
 
-    def test_dbstorage_new_save(self):
-        '''
-           Testing save method
-        '''
-        new_state = State(name="NewYork")
-        storage.new(new_state)
-        save_id = new_state.id
-        result = storage.all("State")
-        temp_list = []
-        for k, v in result.items():
-            temp_list.append(k.split('.')[1])
-            obj = v
-        self.assertTrue(save_id in temp_list)
-        self.assertIsInstance(obj, State)
+    def test_save(self):
+        """ Testing save """
+        i = self.value()
+        i.save()
+        key = self.name + "." + i.id
+        with open('file.json', 'r') as f:
+            j = json.load(f)
+            self.assertEqual(j[key], i.to_dict())
 
-    def test_dbstorage_delete(self):
-        '''
-            Testing delete method
-        '''
-        new_user = User(email="haha@hehe.com", password="abc",
-                        first_name="Adriel", last_name="Tolentino")
-        storage.new(new_user)
-        save_id = new_user.id
-        key = "User.{}".format(save_id)
-        self.assertIsInstance(new_user, User)
-        storage.save()
-        old_result = storage.all("User")
-        del_user_obj = old_result[key]
-        storage.delete(del_user_obj)
-        new_result = storage.all("User")
-        self.assertNotEqual(len(old_result), len(new_result))
+    def test_str(self):
+        """ """
+        i = self.value()
+        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
+                         i.__dict__))
 
-    def test_model_storage(self):
-        '''
-            Test to check if storage is an instance for DBStorage
-        '''
-        self.assertTrue(isinstance(storage, DBStorage))
+    def test_todict(self):
+        """ """
+        i = self.value()
+        n = i.to_dict()
+        self.assertEqual(i.to_dict(), n)
 
-    def test_get(self):
-        '''
-            Test if get method retrieves obj requested
-        '''
-        new_state = State(name="NewYork")
-        storage.new(new_state)
-        key = "State.{}".format(new_state.id)
-        result = storage.get("State", new_state.id)
-        self.assertTrue(result.id, new_state.id)
-        self.assertIsInstance(result, State)
+    def test_kwargs_none(self):
+        """ """
+        n = {None: None}
+        with self.assertRaises(TypeError):
+            new = self.value(**n)
 
-    def test_count(self):
-        '''
-            Test if count method returns expected number of objects
-        '''
-        storage.reload()
-        old_count = storage.count("State")
-        new_state1 = State(name="NewYork")
-        storage.new(new_state1)
-        new_state2 = State(name="Virginia")
-        storage.new(new_state2)
-        new_state3 = State(name="California")
-        storage.new(new_state3)
-        self.assertEqual(old_count + 3, storage.count("State"))
+    def test_kwargs_one(self):
+        """ """
+        n = {'Name': 'test'}
+        with self.assertRaises(KeyError):
+            new = self.value(**n)
+
+    def test_id(self):
+        """ """
+        new = self.value()
+        self.assertEqual(type(new.id), str)
+
+    def test_created_at(self):
+        """ """
+        new = self.value()
+        self.assertEqual(type(new.created_at), datetime.datetime)
+
+    def test_updated_at(self):
+        """ """
+        new = self.value()
+        self.assertEqual(type(new.updated_at), datetime.datetime)
+        n = new.to_dict()
+        new = BaseModel(**n)
+        self.assertFalse(new.created_at == new.updated_at)
