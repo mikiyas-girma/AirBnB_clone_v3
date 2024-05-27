@@ -97,3 +97,23 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_get(self):
+        """
+        test get method
+        """
+        new = BaseModel()
+        new.save()
+        temp = new.id
+        self.assertEqual(new, self.value.get(self.name, temp))
+
+    def test_count(self):
+        """
+        test count method
+        """
+        new = BaseModel()
+        temp = self.value.count()
+        self.assertEqual(temp, 1)
+        new = BaseModel()
+        temp = self.value.count()
+        self.assertEqual(temp, 2)

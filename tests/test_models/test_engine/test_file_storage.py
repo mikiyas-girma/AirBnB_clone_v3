@@ -121,7 +121,7 @@ class test_fileStorage(unittest.TestCase):
 
     def test_count(self):
         '''
-        Test if count method returns expected number of objects
+        Test if count method returns expected number of objects.s.s
         '''
         old_count = storage.count("State")
         new_state1 = State(name="NewYork")

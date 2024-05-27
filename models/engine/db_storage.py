@@ -8,6 +8,7 @@ HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import models
 from models.base_model import Base
 from models.user import User
 from models.state import State
@@ -42,19 +43,14 @@ class DBStorage:
         """query on the current database session
         and returns a dictionary of models"""
         classes = [State, User, City, Amenity, Place, Review]
-        objects = {}
-        if cls is None:
-            for cls in classes:
-                query = self.__session.query(cls)
-                for obj in query.all():
-                    key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                    objects[key] = obj
-        else:
-            query = self.__session.query(cls)
-            for obj in query.all():
-                key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                objects[key] = obj
-        return objects
+        new_dict = {}
+        for cls in classes:
+            if cls is None or cls in classes:
+                objs = self.__session.query(cls).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         """adds the obj passed to database storage"""
@@ -89,7 +85,7 @@ class DBStorage:
         '''
         obj_dict = models.storage.all(cls)
         for k, v in obj_dict.items():
-            matchstring = cls + '.' + id
+            matchstring = cls.__name__ + '.' + id
             if k == matchstring:
                 return v
 
