@@ -68,7 +68,7 @@ class FileStorage:
         """calls reload() method for deserializing the JSON file to objects"""
         self.reload()
 
-     def get(self, cls, id):
+    def get(self, cls, id):
         '''
         gets an object
         '''
@@ -86,4 +86,3 @@ class FileStorage:
         '''
         obj_dict = models.storage.all(cls)
         return len(obj_dict)
-
