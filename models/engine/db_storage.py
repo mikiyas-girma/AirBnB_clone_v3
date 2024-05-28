@@ -43,14 +43,19 @@ class DBStorage:
         """query on the current database session
         and returns a dictionary of models"""
         classes = [State, User, City, Amenity, Place, Review]
-        new_dict = {}
-        for cls in classes:
-            if cls is None or cls in classes:
-                objs = self.__session.query(cls).all()
-                for obj in objs:
+        obj_dict = {}
+        if cls is None:
+            for cls in classes:
+                query = self.__session.query(cls)
+                for obj in query.a():
                     key = obj.__class__.__name__ + '.' + obj.id
-                    new_dict[key] = obj
-        return (new_dict)
+                    obj_dict[key] = obj
+        else:
+            query = self.__session.query(cls)
+            for obj in query.all():
+                key = obj.__class__.__name__ + '.' + obj.id
+                obj_dict[key] = obj
+        return obj_dict
 
     def new(self, obj):
         """adds the obj passed to database storage"""

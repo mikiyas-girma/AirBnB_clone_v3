@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-api view for index and several blueprints"""
+api view for index and several blueprints
+"""
 
 from models import storage
 from models.user import User
