@@ -27,7 +27,7 @@ def get_state(state_id):
     """
     state = storage.get(State, state_id)
     if not state:
-        abort(404)
+        abort(404, "Not found")
     return jsonify(state.to_dict())
 
 
@@ -38,7 +38,7 @@ def delete_state(state_id):
     """
     state = storage.get(State, state_id)
     if not State:
-        abort(404)
+        abort(404, "Not found")
     storage.delete(state)
     storage.save()
     return jsonify({}), 200
@@ -51,9 +51,9 @@ def add_state():
     """
     req = request.get_json()
     if not req:
-        return jsonify({"error": "Not a JSON"}), 400
+        abort(400, "Not a JSON")
     if 'name' not in req:
-        return jsonify({"error": "Missing name"}), 400
+        abort(400, "Missing name")
     new_state = State(**request.json)
     new_state.save()
     return jsonify(new_state.to_dict()), 201
@@ -66,10 +66,10 @@ def update_state(state_id):
     """
     state = storage.get(State, state_id)
     if not state:
-        abort(404)
+        abort(404, "Not found")
     state_dict = request.get_json()
     if not state_dict:
-        return jsonify({"error": "Not a JSON"}), 400
+        abort(400, "Not a JSON")
     for key, value in state_dict.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
