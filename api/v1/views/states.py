@@ -49,8 +49,8 @@ def add_state():
     """
     add new state object
     """
-    req = request.get_json()
-    if not req:
+    req = request.get_json(force=True)
+    if not isinstance(req, dict):
         abort(400, "Not a JSON")
     if 'name' not in req:
         abort(400, "Missing name")
@@ -64,9 +64,9 @@ def update_state(state_id):
     """
     update a state with given id with key value pairs passed
     """
-    state_dict = request.get_json()
-    if not state_dict:
-        return jsonify({"error": "Not a JSON"}), 400
+    state_dict = request.get_json(force=True)
+    if not isinstance(state_dict, dict):
+        abort(400, "Not a JSON")
     state = storage.get(State, state_id)
     if state is None:
         abort(404, "Not found")
