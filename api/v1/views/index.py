@@ -26,3 +26,12 @@ classes = {
 def status():
     ''' routes to status page '''
     return jsonify({"status": "OK"})
+
+
+@app_views.route('/stats')
+def stats():
+    ''' retrieves the number of each objects by type '''
+    stats = {}
+    for key, value in classes.items():
+        stats[key] = storage.count(value)
+    return jsonify(stats)
