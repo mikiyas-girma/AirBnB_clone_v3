@@ -64,12 +64,12 @@ def update_state(state_id):
     """
     update a state with given id with key value pairs passed
     """
-    state = storage.get(State, state_id)
-    if not state:
-        abort(404, "Not found")
     state_dict = request.get_json()
     if not state_dict:
-        abort(400, "Not a JSON")
+        return jsonify({"error": "Not a JSON"}), 400
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404, "Not found")
     for key, value in state_dict.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
