@@ -22,6 +22,9 @@ def do_teardown(self):
 
 
 if __name__ == "__main__":
+    """
+    runs the app when called from the command line
+    """
     host = os.environ.get("HBNB_API_HOST")
     port = os.environ.get("HBNB_API_PORT")
     if not host:
