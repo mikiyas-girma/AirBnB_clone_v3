@@ -3,7 +3,7 @@
 from os import getenv
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
-from sqlalchemy.orm import Relationship
+from sqlalchemy.orm import relationship
 
 
 class State(BaseModel, Base):
@@ -12,7 +12,7 @@ class State(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
 
-    cities = Relationship(
+    cities = relationship(
         "City",
         cascade="all,delete,delete-orphan",
         backref="state",
