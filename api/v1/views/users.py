@@ -10,7 +10,8 @@ from models.city import City
 from models.user import User
 
 
-@app_views.route('/users/', methods=['GET'])
+@app_views.route('/users/', methods=['GET'],
+                 strict_slashes=False)
 def get_users():
     """
     Retrieves the list of all User objects
@@ -45,7 +46,8 @@ def delete_user(user_id):
     return jsonify({}), 200
 
 
-@app_views.route('/users/', methods=['POST'])
+@app_views.route('/users/', methods=['POST'],
+                 strict_slashes=False)
 def add_user():
     """
     add new user object
