@@ -20,6 +20,8 @@ def get_places(city_id):
     if not city:
         abort(404)
     places = city.places
+    if not places:
+        abort(404)
     places_list = []
     for place in places:
         places_list.append(place.to_dict())
